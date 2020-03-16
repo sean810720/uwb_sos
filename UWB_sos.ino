@@ -147,8 +147,7 @@ void loop() {
 
     /* 啟動蜂鳴器 */
     buzz_play();
-
-    delay(100);
+    delay(1000);
   }
 
   server.handleClient();
