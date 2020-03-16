@@ -140,6 +140,7 @@ void loop() {
   /* 按下按鈕: 執行重置 */
   if (bouncer.update() && bouncer.read() == HIGH) {
     initAll();
+    delay(100);
   }
 
   // 通知狀態為 true 時處理
