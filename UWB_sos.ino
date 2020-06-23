@@ -1,15 +1,12 @@
+// 載入設定參數
+#include "setting.h"
+
 // 設定: 通知狀態
 boolean sosStatus = false;
 
 // 設定: Wifi
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
-#ifndef STASSID
-#define STASSID "SC-WIFI"
-#define STAPSK  "29034319"
-#endif
-const char* ssid = STASSID;
-const char* password = STAPSK;
 
 // 設定: IoT Server
 #include <ESP8266WebServer.h>
@@ -50,8 +47,6 @@ uint8_t half_block[8] = {0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c};
 #include <ESP8266HTTPClient.h>
 WiFiClient client;
 HTTPClient http;
-#define HOST_NAME "172.31.19.71"
-#define REGION_ID "4"
 
 void setup() {
 
@@ -107,7 +102,7 @@ void setup() {
 
   // 回報裝置 IP
   String request = String();
-  request += "http://" + String(HOST_NAME) + "/api/sos_device?";
+  request += "http://" + String(HOST_NAME) + String(API_URL) + "?";
   request += "region_id=" + String(REGION_ID);
   request += "&device_ip=" + WiFi.localIP().toString();
 
