@@ -13,11 +13,6 @@ boolean sosStatus = false;
 const char* ssid = STASSID;
 const char* password = STAPSK;
 
-/* 設定為公司內網固定 IP */
-//IPAddress ip(192, 168, 3, 201);
-//IPAddress gateway(192, 168, 1, 1);
-//IPAddress subnet(255, 255, 255, 0);
-
 // 設定: IoT Server
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
@@ -53,6 +48,11 @@ uint8_t retarrow[8]   = {0x1, 0x1, 0x5, 0x9, 0x1f, 0x8, 0x4};
 uint8_t block[8]      = {0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f};
 uint8_t half_block[8] = {0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c};
 
+// 設定: 核心 API
+#include <ESP8266HTTPClient.h>
+#define HOST_NAME "172.31.19.71"
+#define HOST_PORT (80)
+#define MAP_ID "4"
 
 void setup() {
 
@@ -105,6 +105,36 @@ void setup() {
   lcd.setCursor(5, 1);
   lcd.write(5);
   delay(1000);
+
+  // 回報裝置 IP
+  WiFiClient client;
+  HTTPClient http;
+
+  String tmp = String();
+  tmp += "http://" + String(HOST_NAME) + "/api/sos_device?";
+  tmp += "map_id=" + String(MAP_ID);
+  tmp += "&device_ip=" + WiFi.localIP().toString();
+
+  if (http.begin(client, tmp)) {
+    int httpCode = http.GET();
+     Serial.println("[HTTP] tmp string: " + tmp);
+    
+    if (httpCode > 0) {
+      Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+
+      if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+        String payload = http.getString();
+        Serial.println(payload);
+      }
+
+    } else {
+      Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
+    }
+
+    http.end();
+  } else {
+    Serial.printf("[HTTP} Unable to connect\n");
+  }
 
   if (MDNS.begin("esp8266")) {
     Serial.println("MDNS responder started");
