@@ -14,9 +14,9 @@ const char* ssid = STASSID;
 const char* password = STAPSK;
 
 /* 設定為公司內網固定 IP */
-IPAddress ip(192, 168, 3, 205);
-IPAddress gateway(192, 168, 1, 1);
-IPAddress subnet(255, 255, 255, 0);
+//IPAddress ip(192, 168, 3, 201);
+//IPAddress gateway(192, 168, 1, 1);
+//IPAddress subnet(255, 255, 255, 0);
 
 // 設定: IoT Server
 #include <ESP8266WebServer.h>
