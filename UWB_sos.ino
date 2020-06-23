@@ -4,12 +4,10 @@ boolean sosStatus = false;
 // 設定: Wifi
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
-
 #ifndef STASSID
 #define STASSID "SC-WIFI"
 #define STAPSK  "29034319"
 #endif
-
 const char* ssid = STASSID;
 const char* password = STAPSK;
 
@@ -50,8 +48,9 @@ uint8_t half_block[8] = {0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c};
 
 // 設定: 核心 API
 #include <ESP8266HTTPClient.h>
+WiFiClient client;
+HTTPClient http;
 #define HOST_NAME "172.31.19.71"
-#define HOST_PORT (80)
 #define MAP_ID "4"
 
 void setup() {
@@ -107,24 +106,20 @@ void setup() {
   delay(1000);
 
   // 回報裝置 IP
-  WiFiClient client;
-  HTTPClient http;
+  String request = String();
+  request += "http://" + String(HOST_NAME) + "/api/sos_device?";
+  request += "map_id=" + String(MAP_ID);
+  request += "&device_ip=" + WiFi.localIP().toString();
 
-  String tmp = String();
-  tmp += "http://" + String(HOST_NAME) + "/api/sos_device?";
-  tmp += "map_id=" + String(MAP_ID);
-  tmp += "&device_ip=" + WiFi.localIP().toString();
-
-  if (http.begin(client, tmp)) {
+  if (http.begin(client, request)) {
+    Serial.println("[HTTP] Request: " + request);
     int httpCode = http.GET();
-     Serial.println("[HTTP] tmp string: " + tmp);
-    
+
     if (httpCode > 0) {
-      Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+      Serial.printf("[HTTP] GET code: %d\n", httpCode);
 
       if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
-        String payload = http.getString();
-        Serial.println(payload);
+        Serial.println(http.getString());
       }
 
     } else {
@@ -132,6 +127,7 @@ void setup() {
     }
 
     http.end();
+
   } else {
     Serial.printf("[HTTP} Unable to connect\n");
   }
