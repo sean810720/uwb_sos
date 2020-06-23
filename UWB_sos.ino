@@ -51,7 +51,7 @@ uint8_t half_block[8] = {0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c};
 WiFiClient client;
 HTTPClient http;
 #define HOST_NAME "172.31.19.71"
-#define MAP_ID "4"
+#define REGION_ID "4"
 
 void setup() {
 
@@ -108,7 +108,7 @@ void setup() {
   // 回報裝置 IP
   String request = String();
   request += "http://" + String(HOST_NAME) + "/api/sos_device?";
-  request += "map_id=" + String(MAP_ID);
+  request += "region_id=" + String(REGION_ID);
   request += "&device_ip=" + WiFi.localIP().toString();
 
   if (http.begin(client, request)) {
