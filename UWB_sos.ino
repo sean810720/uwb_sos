@@ -14,12 +14,8 @@ boolean sosStatus = false;
 ESP8266WebServer server(80);
 
 // 設定: 按鈕
-#define BUTTON_INPUT_PIN 12
 #include <Bounce2.h>
 Bounce bouncer = Bounce(BUTTON_INPUT_PIN, 50);
-
-// 設定: 蜂鳴器
-#define BUZZ_OUTPUT_PIN 13
 
 // 設定: LCD
 #include <Wire.h>
