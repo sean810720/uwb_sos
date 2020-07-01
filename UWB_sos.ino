@@ -48,6 +48,7 @@ HTTPClient http;
 #include <ezTime.h>
 Timezone myTZ;
 
+
 void setup() {
 
   // 初始化: 按鈕
@@ -143,7 +144,7 @@ void setup() {
   delay(1000);
 
   // 初始化: 時區
-  myTZ.setLocation(F("Asia/Taipei"));
+  myTZ.setLocation(F(TIME_ZONE));
   waitForSync();
 
   // 初始化: 蜂鳴器

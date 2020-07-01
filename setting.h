@@ -12,3 +12,6 @@ const char* password = "29034319";
 
 // 設定: 蜂鳴器
 #define BUZZ_OUTPUT_PIN 13
+
+// 設定: 時區
+#define TIME_ZONE "Asia/Taipei"
