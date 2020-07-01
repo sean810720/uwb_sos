@@ -44,6 +44,10 @@ uint8_t half_block[8] = {0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c, 0x1c};
 WiFiClient client;
 HTTPClient http;
 
+// 抓目前時間
+#include <ezTime.h>
+Timezone myTZ;
+
 void setup() {
 
   // 初始化: 按鈕
@@ -138,9 +142,13 @@ void setup() {
   lcd.write(5);
   delay(1000);
 
+  // 初始化: 時區
+  myTZ.setLocation(F("Asia/Taipei"));
+  waitForSync();
+
   // 初始化: 蜂鳴器
   pinMode(BUZZ_OUTPUT_PIN, OUTPUT);
-  buzz_play();
+  //buzz_play();
   lcd.write(1);
   lcd.print("BUZ");
   lcd.write(5);
@@ -166,6 +174,11 @@ void loop() {
     /* 啟動蜂鳴器 */
     buzz_play();
     delay(1000);
+  }
+
+  // 每日定時重啟 (9:00 AM):
+  if (myTZ.dateTime("H:i:s") == "09:00:00") {
+    ESP.restart();
   }
 
   server.handleClient();
